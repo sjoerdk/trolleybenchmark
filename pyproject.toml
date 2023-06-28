@@ -6,7 +6,7 @@ authors = ["sjoerdk <sjoerd.kerkstra@radboudumc.nl>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.7"
 pydantic = "^1.10.9"
 matplotlib = "^3.5"
 
