@@ -29,7 +29,11 @@ class Runner:
 
         for count, experiment in enumerate(self.experiments):
             logger.info(f'running experiment {count}:{experiment}')
-            results.contents.append(experiment.run())
+            try:
+                results.contents.append(experiment.run())
+            except Exception as e:
+                logger.exception(e)
+                raise
             logger.info(f'saving intermediate results to {self.results_path}')
             results.save(self.results_path)
         logger.info('run finished')
