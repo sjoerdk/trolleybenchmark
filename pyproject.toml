@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "trolleybenchmark"
+version = "0.1.0"
+description = "benchmarking dicomtrolley query and download speed"
+authors = ["sjoerdk <sjoerd.kerkstra@radboudumc.nl>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pydantic = "^1.10.9"
+matplotlib = "^3.7.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.3.2"
+factory-boy = "^3.2.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
