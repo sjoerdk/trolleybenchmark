@@ -2,9 +2,9 @@
 import shutil
 from datetime import datetime
 from pathlib import Path
-from typing import List
+from typing import List, Sequence
 
-from dicomtrolley.core import StudyReference
+from dicomtrolley.core import DICOMDownloadable, StudyReference
 from dicomtrolley.storage import StorageDir
 from dicomtrolley.wado_rs import WadoRS
 
@@ -23,15 +23,15 @@ class TrolleyDownloadResult(Result):
 
 
 class WadoRSTrolleyDownloadStudy(Experiment):
-    """Time how long it takes to download """
+    """Time how long it takes to download targets"""
 
-    def __init__(self, downloader: WadoRS, study_uid: str, tmp_dir: str, label: str,
-                 comment: str, limit: int=0):
+    def __init__(self, downloader: WadoRS, targets: Sequence[DICOMDownloadable],
+                 tmp_dir: str, label: str, comment: str, limit: int=0):
         super().__init__(label=label, comment=comment)
         self.tmp_dir = tmp_dir
         self.storage = StorageDir(tmp_dir)
         self.downloader = downloader
-        self.study_uid = study_uid
+        self.targets = targets
         self.limit = limit
 
     def run(self) -> TrolleyDownloadResult:
@@ -44,7 +44,7 @@ class WadoRSTrolleyDownloadStudy(Experiment):
         count = 0
         start = datetime.now()
         for count, dataset in enumerate(
-                self.downloader.datasets(StudyReference(study_uid=self.study_uid))):
+                self.downloader.datasets(self.targets)):
             if self.limit and count >= self.limit:
                 logger.info(f'Stopping after downloading {self.limit} slices')
                 break

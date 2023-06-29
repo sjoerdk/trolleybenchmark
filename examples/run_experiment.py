@@ -2,6 +2,7 @@
 """
 
 import requests
+from dicomtrolley.core import StudyReference
 
 from dicomtrolley.wado_rs import WadoRS
 
@@ -14,7 +15,7 @@ wado_rs = WadoRS(session=session, url="http://hostname/dicomweb/")
 
 experiment = WadoRSTrolleyDownloadStudy(
         downloader=wado_rs,
-        study_uid='1234',
+        targets=[StudyReference('1234')],
         tmp_dir=f"/tmp/run_experiment/",
         label=f"test_run",
         comment=f"test_comment")

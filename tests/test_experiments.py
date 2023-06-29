@@ -1,6 +1,7 @@
 from unittest.mock import Mock
 
 import pytest
+from dicomtrolley.core import StudyReference
 from dicomtrolley.wado_rs import WadoRS
 
 from tests.factories import quick_dataset
@@ -25,7 +26,7 @@ def test_experiment(a_wado_rs, tmp_path):
     tmp_dir.mkdir()
 
     experiment = WadoRSTrolleyDownloadStudy(downloader=a_wado_rs,
-                                            study_uid='123',
+                                            targets=[StudyReference('123')],
                                             tmp_dir=tmp_dir,
                                             label='test',
                                             comment='')
