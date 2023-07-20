@@ -29,6 +29,7 @@ class TrolleyDownloadResultFactory(Factory):
                                    end_dt=datetime.datetime(2023, 1, 1))
     duration = FuzzyFloat(0.1, 400.0)
     seconds_total = FuzzyFloat(0.1, 400.0)
+    bytes_downloaded = FuzzyInteger(1024, 1024*1024)
     mb_per_second = FuzzyFloat(0.1, 30.0)
     instances_downloaded = FuzzyInteger(2, 3000)
 

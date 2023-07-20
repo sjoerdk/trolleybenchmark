@@ -19,7 +19,7 @@ logger = get_module_logger('experiments')
 
 class TrolleyDownloadResult(Result):
     seconds_total: float
-    bytes_on_disk: int
+    bytes_downloaded: int
     mb_per_second: float
     instances_downloaded: int
 
