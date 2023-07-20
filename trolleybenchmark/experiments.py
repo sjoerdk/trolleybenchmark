@@ -1,4 +1,5 @@
 """Specific experiments"""
+import dataclasses
 import shutil
 from datetime import datetime
 from pathlib import Path
@@ -18,6 +19,7 @@ logger = get_module_logger('experiments')
 
 class TrolleyDownloadResult(Result):
     seconds_total: float
+    bytes_on_disk: int
     mb_per_second: float
     instances_downloaded: int
 
@@ -25,17 +27,17 @@ class TrolleyDownloadResult(Result):
 class WadoRSTrolleyDownloadStudy(Experiment):
     """Time how long it takes to download targets"""
 
-    def __init__(self, downloader: WadoRS, targets: Sequence[DICOMDownloadable],
-                 tmp_dir: str, label: str, comment: str, limit: int=0):
+    def __init__(self, downloader: WadoRS, target: DICOMDownloadable,
+                 tmp_dir: str, label: str, comment: str, limit: int = 0):
         super().__init__(label=label, comment=comment)
         self.tmp_dir = tmp_dir
         self.storage = StorageDir(tmp_dir)
         self.downloader = downloader
-        self.targets = targets
+        self.target: DICOMDownloadable = target
         self.limit = limit
 
     def run(self) -> TrolleyDownloadResult:
-        # get default params for result, and then collect stuff
+        """Get default params for result, and then collect stuff"""
 
         if Path(self.tmp_dir).exists():
             logger.info(f'removing all data in {self.tmp_dir}')
@@ -44,7 +46,7 @@ class WadoRSTrolleyDownloadStudy(Experiment):
         count = 0
         start = datetime.now()
         for count, dataset in enumerate(
-                self.downloader.datasets(self.targets)):
+                self.downloader.datasets(self.target)):
             if self.limit and count >= self.limit:
                 logger.info(f'Stopping after downloading {self.limit} slices')
                 break
@@ -61,7 +63,9 @@ class WadoRSTrolleyDownloadStudy(Experiment):
 
         return TrolleyDownloadResult(label=self.label,
                                      comment='',
+                                     tags=dataclasses.asdict(self.target.reference()),
                                      timestamp=start,
+                                     bytes_downloaded=bytes_on_disk,
                                      seconds_total=(end - start).total_seconds(),
                                      mb_per_second=mb_per_second,
                                      instances_downloaded=instances_downloaded)

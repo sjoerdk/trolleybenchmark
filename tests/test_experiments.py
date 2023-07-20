@@ -26,7 +26,7 @@ def test_experiment(a_wado_rs, tmp_path):
     tmp_dir.mkdir()
 
     experiment = WadoRSTrolleyDownloadStudy(downloader=a_wado_rs,
-                                            targets=[StudyReference('123')],
+                                            target=StudyReference('123'),
                                             tmp_dir=tmp_dir,
                                             label='test',
                                             comment='')

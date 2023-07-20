@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "trolleybenchmark"
-version = "0.1.1"
+version = "0.1.2"
 description = "benchmarking dicomtrolley query and download speed"
 authors = ["sjoerdk <sjoerd.kerkstra@radboudumc.nl>"]
 license = "MIT"
