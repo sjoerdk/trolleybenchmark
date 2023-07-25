@@ -7,6 +7,7 @@ from typing import List, Sequence
 
 from dicomtrolley.core import DICOMDownloadable, StudyReference
 from dicomtrolley.storage import StorageDir
+from dicomtrolley.trolley import Trolley
 from dicomtrolley.wado_rs import WadoRS
 
 from trolleybenchmark.core import Experiment, Result
@@ -22,6 +23,53 @@ class TrolleyDownloadResult(Result):
     bytes_downloaded: int
     mb_per_second: float
     instances_downloaded: int
+
+
+class TrolleyDownloadExperiment(Experiment):
+    """Time how long it takes to download a single target"""
+
+    def __init__(self, trolley:Trolley, target: DICOMDownloadable,
+                 tmp_dir: str, label: str, comment: str, limit: int = 0):
+        super().__init__(label=label, comment=comment)
+        self.tmp_dir = tmp_dir
+        self.trolley = trolley
+        self.target: DICOMDownloadable = target
+        self.limit = limit
+
+    @staticmethod
+    def empty_dir(folder):
+        if Path(folder).exists():
+            logger.info(f'removing all data in {folder}')
+            shutil.rmtree(folder)
+
+    def run(self) -> TrolleyDownloadResult:
+
+        count = 0
+        start = datetime.now()
+        self.trolley.download(objects=[self.target], output_dir=self.tmp_dir)
+        end = datetime.now()
+        duration = (end-start).total_seconds()
+        bytes_on_disk = du(self.tmp_dir)
+        logger.info(
+            f'{bytes_on_disk} bytes downloaded ({format_bytes(bytes_on_disk)}) '
+            f'in {(duration):.2f}s')
+
+        mb_per_second = (bytes_on_disk / duration) / (1024 ** 2)
+        instances_downloaded = count
+        self.empty_dir(self.tmp_dir)
+
+        tags = {'target': dataclasses.asdict(self.target.reference()),
+                'downloader': self.trolley.downloader,
+                'searcher': self.trolley.searcher}
+
+        return TrolleyDownloadResult(label=self.label,
+                                     comment=self.comment,
+                                     tags=tags,
+                                     timestamp=start,
+                                     bytes_downloaded=bytes_on_disk,
+                                     seconds_total=(end - start).total_seconds(),
+                                     mb_per_second=mb_per_second,
+                                     instances_downloaded=instances_downloaded)
 
 
 class WadoRSTrolleyDownloadStudy(Experiment):
@@ -62,7 +110,7 @@ class WadoRSTrolleyDownloadStudy(Experiment):
         instances_downloaded = count
 
         return TrolleyDownloadResult(label=self.label,
-                                     comment='',
+                                     comment=self.comment,
                                      tags=dataclasses.asdict(self.target.reference()),
                                      timestamp=start,
                                      bytes_downloaded=bytes_on_disk,
