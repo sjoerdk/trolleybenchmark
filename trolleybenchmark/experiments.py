@@ -3,7 +3,7 @@ import dataclasses
 import shutil
 from datetime import datetime
 from pathlib import Path
-from typing import List, Sequence
+from typing import Any, Dict, List, Sequence
 
 from dicomtrolley.core import DICOMDownloadable, StudyReference
 from dicomtrolley.storage import StorageDir
@@ -14,6 +14,7 @@ from trolleybenchmark.core import Experiment, Result
 from trolleybenchmark.logging import get_module_logger
 from trolleybenchmark.os_functions import du, format_bytes
 from trolleybenchmark.persistence import Results
+from trolleybenchmark.timing import TrolleyDownloadTimer
 
 logger = get_module_logger('experiments')
 
@@ -23,6 +24,7 @@ class TrolleyDownloadResult(Result):
     bytes_downloaded: int
     mb_per_second: float
     instances_downloaded: int
+
 
 
 class TrolleyDownloadExperiment(Experiment):
@@ -46,6 +48,9 @@ class TrolleyDownloadExperiment(Experiment):
 
         count = 0
         start = datetime.now()
+        timer = TrolleyDownloadTimer()
+        timer.attach_to_trolley(self.trolley)
+
         self.trolley.download(objects=[self.target], output_dir=self.tmp_dir)
         end = datetime.now()
         duration = (end-start).total_seconds()
@@ -59,8 +64,11 @@ class TrolleyDownloadExperiment(Experiment):
         self.empty_dir(self.tmp_dir)
 
         tags = {'target': dataclasses.asdict(self.target.reference()),
-                'downloader': self.trolley.downloader,
-                'searcher': self.trolley.searcher}
+                'downloader': str(self.trolley.downloader),
+                'searcher': str(self.trolley.searcher),
+                'timer_total': timer.total_time,
+                'timer_search': timer.search_time,
+                'timer_download': timer.download_time}
 
         return TrolleyDownloadResult(label=self.label,
                                      comment=self.comment,

@@ -11,7 +11,8 @@ from dicomtrolley.trolley import Trolley
 from dicomtrolley.wado_rs import WadoRS
 
 from trolleybenchmark.runner import Runner
-from trolleybenchmark.experiments import WadoRSTrolleyDownloadStudy
+from trolleybenchmark.experiments import TrolleyDownloadExperiment, \
+    WadoRSTrolleyDownloadStudy
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("PIL").setLevel(logging.INFO)  # shut up PIL
@@ -31,8 +32,8 @@ for study in studies:
 
         experiments = []
         for series in series_list:
-                experiments.append(WadoRSTrolleyDownloadStudy(
-                        downloader=trolley.downloader,
+                experiments.append(TrolleyDownloadExperiment(
+                        trolley=trolley,
                         target=series,
                         tmp_dir=f"/tmp/run_experiment/",
                         label=f"series for {study.study_uid}",

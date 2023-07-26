@@ -20,7 +20,7 @@ def boxplot_per_label(results: TrolleyDownloadResults, title='title'):
         per_type_sorted[key] = per_type[key]
 
     # boxplot per type
-    fig, ax = plt.subplots(figsize=(7, 7))
+    fig, ax = plt.subplots(figsize=(16, 16))
     bins_sorted = [per_type_sorted[x] for x in sorted(per_type_sorted.keys())]
     ax.boxplot([np.array([y.mb_per_second for y in x]) for x in bins_sorted])
 

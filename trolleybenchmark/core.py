@@ -1,6 +1,6 @@
 import socket
 from datetime import datetime
-from typing import Dict
+from typing import Any, Dict
 
 from pydantic import BaseModel
 
@@ -45,8 +45,6 @@ class Experiment:
 class Result(BaseModel):
     comment: str  # any string to describe this result
     label: str  # class for this result. For grouping, etc
-    tags: Dict[str, str] = {}  # for grouping
+    tags: Dict[str, Any] = {}  # for grouping
     timestamp: datetime = datetime.now()  # when was experiment object created
     hostname: str = socket.gethostname()  # which machine
-
-
