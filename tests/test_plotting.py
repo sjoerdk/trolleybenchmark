@@ -1,11 +1,13 @@
 from pathlib import Path
+from typing import List
 
 import pytest
 from matplotlib import pyplot as plt
 
 from tests.factories import TrolleyDownloadResultFactory
+from trolleybenchmark.experiments import TrolleyDownloadResult
 from trolleybenchmark.persistence import Results
-from trolleybenchmark.plotting import boxplot_per_label
+from trolleybenchmark.plotting import BoxPlotDataPoint, boxplot_per_label
 
 
 @pytest.fixture
@@ -29,8 +31,11 @@ def a_results_file(tmpdir, some_results):
 
 def test_plotting(a_results_file):
     """Just don't crash"""
-    # plot some results file
-    results = Results.load(a_results_file)
-    boxplot_per_label(results=results, title='test plot')
+    # plot some data_points file
+    results: List[TrolleyDownloadResult] = Results.load(a_results_file).contents
+    # convert to data point
+    data_points = [BoxPlotDataPoint(
+        value=x.mb_per_second, label=x.label) for x in results]
+    boxplot_per_label(data_points=data_points, title='test plot')
     # Visually inspect once, then just assume it will work.
     # plt.show()

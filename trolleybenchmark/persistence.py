@@ -9,7 +9,7 @@ from trolleybenchmark.core import Result
 
 
 class Results(BaseModel):
-    """Contains results. For easy persisting"""
+    """Contains data_points. For easy persisting"""
     contents: List[Result]
     description: str = ""
 

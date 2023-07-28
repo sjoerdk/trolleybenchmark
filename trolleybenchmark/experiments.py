@@ -128,5 +128,5 @@ class WadoRSTrolleyDownloadStudy(Experiment):
 
 
 class TrolleyDownloadResults(Results):
-    """Contains results. For easy persisting"""
+    """Contains data_points. For easy persisting"""
     contents: List[TrolleyDownloadResult]

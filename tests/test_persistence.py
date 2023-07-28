@@ -5,7 +5,7 @@ from trolleybenchmark.persistence import Results
 
 
 def test_results_load_save():
-    """You can persist results to disk"""
+    """You can persist data_points to disk"""
     results = Results(contents=[ResultFactory() for _ in range(5)])
     file = BytesIO()
     results.save(file)

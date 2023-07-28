@@ -10,7 +10,7 @@ logger = get_module_logger("core")
 
 
 class Experiment:
-    """A piece of code you can execute in a runner to time it and collect results"""
+    """A piece of code you can execute in a runner to time it and collect data_points"""
 
     def __init__(self, comment: str, label: str):
         self.comment = comment
