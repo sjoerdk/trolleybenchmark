@@ -7,7 +7,8 @@ from matplotlib import pyplot as plt
 from tests.factories import TrolleyDownloadResultFactory
 from trolleybenchmark.experiments import TrolleyDownloadResult
 from trolleybenchmark.persistence import Results
-from trolleybenchmark.plotting import BoxPlotDataPoint, boxplot_per_label
+from trolleybenchmark.plotting import BoxPlotDataPoint, StringOrdering, \
+    boxplot_per_label
 
 
 @pytest.fixture
@@ -39,3 +40,8 @@ def test_plotting(a_results_file):
     boxplot_per_label(data_points=data_points, title='test plot')
     # Visually inspect once, then just assume it will work.
     # plt.show()
+
+
+def test_string_ordering():
+    ordering = StringOrdering(first=['one', 'two'], last=['the end'])
+    assert ordering.apply(['three', 'two', '']) == ['two', 'three', '']

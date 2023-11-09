@@ -26,11 +26,10 @@ class TrolleyDownloadResult(Result):
     instances_downloaded: int
 
 
-
 class TrolleyDownloadExperiment(Experiment):
     """Time how long it takes to download a single target"""
 
-    def __init__(self, trolley:Trolley, target: DICOMDownloadable,
+    def __init__(self, trolley: Trolley, target: DICOMDownloadable,
                  tmp_dir: str, label: str, comment: str, limit: int = 0):
         super().__init__(label=label, comment=comment)
         self.tmp_dir = tmp_dir

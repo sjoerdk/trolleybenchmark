@@ -7,7 +7,7 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-pydantic = "^1.10.9"
+pydantic = "^1.10"
 matplotlib = "^3.5"
 
 [tool.poetry.dev-dependencies]
